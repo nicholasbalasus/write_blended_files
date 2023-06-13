@@ -78,7 +78,6 @@ download_tropomi () {
 write_blended () {
     Year=$1
     Month=$2
-    Month=$(printf "%02d" $Month)
     mkdir -p ${StorageDir}/blended/${Year}-${Month}
     conda activate blnd_env
     python write_blended_files.py
