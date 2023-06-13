@@ -3,7 +3,7 @@
 #SBATCH -t 360
 #SBATCH -c 48
 #SBATCH --mem 48000
-#SBATCH -p huce_cascade
+#SBATCH -p huce_cascade,huce_ice
 
 # Read config file and get functions
 source utils.sh
@@ -21,6 +21,8 @@ fi
 # Get the uncompressed model_lgbm.pkl file
 gunzip -k model_lgbm.pkl.gz
 
+# Loop through the array of Months
+read -a Months <<< "$Months" # converts Months to an array
 for Month in "${Months[@]}"; do
 
   # Download the TROPOMI data for the given month and year
