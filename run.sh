@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH -t 120
+#SBATCH -t 360
 #SBATCH -c 48
 #SBATCH --mem 48000
 #SBATCH -p huce_cascade
@@ -21,11 +21,15 @@ fi
 # Get the uncompressed model_lgbm.pkl file
 gunzip -k model_lgbm.pkl.gz
 
-# Download the TROPOMI data for the given month and year
-download_tropomi $Year $Month
+for Month in "${Months[@]}"; do
 
-# Write the Blended data for the given month and year
-write_blended $Year $Month
+  # Download the TROPOMI data for the given month and year
+  download_tropomi $Year $Month
+
+  # Write the Blended data for the given month and year
+  write_blended $Year $Month
+
+done
 
 # Remove the uncompressed model_lgbm.pkl file
 rm model_lgbm.pkl

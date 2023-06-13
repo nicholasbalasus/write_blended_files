@@ -86,7 +86,7 @@ def f_write_blended_files(src_file):
 
     # new file will have the same name but with BLND as the acronym and the creation time changed
     dst_file = src_file.split("/")[-1].replace("RPRO","BLND").replace("OFFL", "BLND")
-    dst_file = os.path.join(config["StorageDir"], "blended", f"{config['Year']}-{(str(config['Month'])).zfill(2)}", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
+    dst_file = os.path.join(config["StorageDir"], "blended", f"{year}-{(str(month)).zfill(2)}", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
 
     # remove dst_file if it already exists (weird notation is because the time generated portion of the filename is unique)
     [os.remove(file) for file in glob.glob(dst_file[:dst_file.rfind("_")+1]+"*")]
@@ -195,7 +195,9 @@ def f_write_blended_files(src_file):
 if __name__ == "__main__":
 
     # Write BLND files using as many cores as you have
-    src_files = glob.glob(os.path.join(config["StorageDir"], "tropomi", f"{config['Year']}-{(str(config['Month'])).zfill(2)}", "*.nc"))
+    year = sys.argv[1]
+    month = sys.argv[2]
+    src_files = glob.glob(os.path.join(config["StorageDir"], "tropomi", f"{year}-{(str(month)).zfill(2)}", "*.nc"))
     src_files.sort()
     num_processes = multiprocessing.cpu_count()
     with multiprocessing.Pool(processes=num_processes) as pool:

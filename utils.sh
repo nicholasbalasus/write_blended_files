@@ -80,5 +80,5 @@ write_blended () {
     Month=$2
     mkdir -p ${StorageDir}/blended/${Year}-${Month}
     conda activate blnd_env
-    python write_blended_files.py
+    python write_blended_files.py $Year $Month
 }

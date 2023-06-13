@@ -1,6 +1,6 @@
-# Year and month to write the blended data for
+# Year and month to write the blended data for (can handle one or multiple months)
 Year: 2018
-Month: 4
+Months: 4 5 6 7 8 9 10 11 12
 
 # Directory that can handle TROPOMI data being downloaded and Blended data being written
 StorageDir: /n/holylfs05/LABS/jacob_lab/nbalasus/dataverse
