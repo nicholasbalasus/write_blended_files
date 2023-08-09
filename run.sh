@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -t 360
-#SBATCH -c 48
-#SBATCH --mem 48000
+#SBATCH -t 2-00:00
+#SBATCH -c 1
+#SBATCH --mem 16000
 #SBATCH -p huce_cascade,huce_ice
 
 # Read config file and get functions
@@ -12,8 +12,8 @@ eval $(parse_yaml config.yml)
 # Get access to miniconda and mamba solver
 source ~/.bashrc
 conda install -c conda-forge mamba
-if conda env list | grep -q "blnd_env"; then # update env if it exists
-  mamba env update -f blnd_env.yml
+if conda env list | grep -q "blnd_env"; then
+  true
 else # if it doesn't exist, make a new one
   mamba env create -f blnd_env.yml
 fi

@@ -66,8 +66,8 @@ download_tropomi () {
     sed -i -e 's/<link href=//g' files.txt
     sed -i -e 's/\/>//g' files.txt
 
-    # download tropomi data with a maximum of 48 wget running simultaneously
-    xargs -n 1 -P 48 wget --content-disposition --continue --no-check-certificate --tries=5 --user=s5pguest --password=s5pguest -P ${StorageDir}/tropomi/${Year}-$(printf "%02d" $Month) < files.txt
+    # download tropomi data with wget
+    xargs -n 1 -P 1 wget --content-disposition --continue --no-check-certificate --tries=5 --user=s5pguest --password=s5pguest -P ${StorageDir}/tropomi/${Year}-$(printf "%02d" $Month) < files.txt
 
     # remove text files
     rm files.txt
