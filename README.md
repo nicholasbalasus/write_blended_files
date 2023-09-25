@@ -1,4 +1,4 @@
-These scripts write one month of data for the blended TROPOMI+GOSAT product as described in [Balasus et al. (2023)](https://doi.org/10.5194/amt-2023-47). The file `model_lgbm.pkl.gz` and associated corrections (`a` and `b` in `config.yml`) come from the above paper (and thus from [this](https://github.com/nicholasbalasus/blended_tropomi_gosat_methane) code).
+These scripts write one month of data for the blended TROPOMI+GOSAT product as described in [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023). The file `model_lgbm.pkl.gz` and associated corrections (`a` and `b` in `config.yml`) come from the above paper (and thus from [this](https://github.com/nicholasbalasus/blended_tropomi_gosat_methane) code).
 
 1. Create the `blnd_env` environment.
     - Install [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html).

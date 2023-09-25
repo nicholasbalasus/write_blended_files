@@ -32,7 +32,7 @@ download_tropomi () {
     python get_download_links.py $Year $Month
 
     # download tropomi data with wget
-    xargs -n 1 -P 40 wget -q --content-disposition --header "Authorization: Bearer $ACCESS_TOKEN" -P "${dir}" < links.txt
+    xargs -n 1 -P 40 wget -nv --content-disposition --header "Authorization: Bearer $ACCESS_TOKEN" -P "${dir}" < links.txt
 
     # remove text files
     rm links.txt
