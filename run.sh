@@ -1,22 +1,22 @@
 #!/bin/bash
 
 #SBATCH -t 2-00:00
-#SBATCH -c 1
-#SBATCH --mem 16000
-#SBATCH -p huce_cascade,huce_ice
+#SBATCH -c 40
+#SBATCH --mem 96000
+#SBATCH -p huce_cascade,seas_compute
 
-# Read config file and get functions
+# Setup
+source ~/.bashrc
 source utils.sh
 eval $(parse_yaml config.yml)
-
-# Get access to miniconda and mamba solver
-source ~/.bashrc
-conda install -c conda-forge mamba
-if conda env list | grep -q "blnd_env"; then
-  true
-else # if it doesn't exist, make a new one
-  mamba env create -f blnd_env.yml
-fi
+username=$( awk -v machine="identity.dataspace.copernicus.eu" '$2 == machine {print $4 }' ~/.netrc )
+password=$( awk -v machine="identity.dataspace.copernicus.eu" '$2 == machine {print $6 }' ~/.netrc )
+export ACCESS_TOKEN=$(curl -d 'client_id=cdse-public' \
+                    -d "username=${username}" \
+                    -d "password=${password}" \
+                    -d 'grant_type=password' \
+                    'https://identity.dataspace.copernicus.eu/auth/realms/CDSE/protocol/openid-connect/token' | \
+                    python3 -m json.tool | grep "access_token" | awk -F\" '{print $4}')
 
 # Get the uncompressed model_lgbm.pkl file
 gunzip -k model_lgbm.pkl.gz

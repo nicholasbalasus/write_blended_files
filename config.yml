@@ -3,7 +3,7 @@ Year: 2018
 Months: 4 5 6 7 8 9 10 11 12
 
 # Directory that can handle TROPOMI data being downloaded and Blended data being written
-StorageDir: /n/holylfs05/LABS/jacob_lab/nbalasus/dataverse
+StorageDir: /n/holylfs05/LABS/jacob_lab/Users/nbalasus/dataverse
 
 # Correction factors for lgbm outputs from Balasus et al. (2023)
 a: 1.18

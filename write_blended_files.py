@@ -91,7 +91,7 @@ def f_write_blended_files(src_file):
     # remove dst_file if it already exists (weird notation is because the time generated portion of the filename is unique)
     [os.remove(file) for file in glob.glob(dst_file[:dst_file.rfind("_")+1]+"*")]
 
-    print(src_file, flush=True)
+    print(f"Writing {dst_file}", flush=True)
 
     with Dataset(src_file) as src, Dataset(dst_file, "w") as dst:
     
