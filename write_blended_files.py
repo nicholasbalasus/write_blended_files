@@ -147,8 +147,7 @@ def f_write_blended_files(src_file):
         # Copy over variables and their attributes from the PRODUCT/SUPPORT_DATA/INPUT_DATA group
         vars_to_keep_in_PRODUCT_SUPPORT_DATA_INPUT_DATA = ["surface_altitude","surface_altitude_precision",
                                                            "surface_classification","surface_pressure",
-                                                           "pressure_interval","reflectance_cirrus_VIIRS_SWIR",
-                                                           "eastward_wind","northward_wind"]
+                                                           "pressure_interval","reflectance_cirrus_VIIRS_SWIR"]
         for var in vars_to_keep_in_PRODUCT_SUPPORT_DATA_INPUT_DATA:
             dst.createVariable(var, src["PRODUCT/SUPPORT_DATA/INPUT_DATA/"+var].datatype, ('nobs'))
             dst[var].setncatts(src["PRODUCT/SUPPORT_DATA/INPUT_DATA/"+var].__dict__)
