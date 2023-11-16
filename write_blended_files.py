@@ -8,9 +8,6 @@ import pickle
 import multiprocessing
 import sys
 
-with open("config.yml", "r") as f:
-    config = yaml.safe_load(f)
-
 # Function to turn one netCDF TROPOMI file into one pandas dataframe
 def get_tropomi_df(tropomi_file):
     
@@ -86,7 +83,7 @@ def f_write_blended_files(src_file):
 
     # new file will have the same name but with BLND as the acronym and the creation time changed
     dst_file = src_file.split("/")[-1].replace("RPRO","BLND").replace("OFFL", "BLND")
-    dst_file = os.path.join(config["StorageDir"], "blended", f"{year}-{(str(month)).zfill(2)}", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
+    dst_file = os.path.join(config["StorageDir"], f"{year}-{(str(month)).zfill(2)}", "blended", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
 
     # remove dst_file if it already exists (weird notation is because the time generated portion of the filename is unique)
     [os.remove(file) for file in glob.glob(dst_file[:dst_file.rfind("_")+1]+"*")]
@@ -114,7 +111,7 @@ def f_write_blended_files(src_file):
         
         # Copy over variables and their attributes from the PRODUCT group
         vars_to_keep_in_PRODUCT = ["qa_value","latitude","longitude","methane_mixing_ratio","methane_mixing_ratio_precision",
-                                "methane_mixing_ratio_bias_corrected"]
+                                   "methane_mixing_ratio_bias_corrected"]
         for var in vars_to_keep_in_PRODUCT:
             dst.createVariable(var, src["PRODUCT/"+var].datatype, ('nobs'))
             dst[var].setncatts(src["PRODUCT/"+var].__dict__)
@@ -150,7 +147,8 @@ def f_write_blended_files(src_file):
         # Copy over variables and their attributes from the PRODUCT/SUPPORT_DATA/INPUT_DATA group
         vars_to_keep_in_PRODUCT_SUPPORT_DATA_INPUT_DATA = ["surface_altitude","surface_altitude_precision",
                                                            "surface_classification","surface_pressure",
-                                                           "pressure_interval","reflectance_cirrus_VIIRS_SWIR"]
+                                                           "pressure_interval","reflectance_cirrus_VIIRS_SWIR",
+                                                           "eastward_wind","northward_wind"]
         for var in vars_to_keep_in_PRODUCT_SUPPORT_DATA_INPUT_DATA:
             dst.createVariable(var, src["PRODUCT/SUPPORT_DATA/INPUT_DATA/"+var].datatype, ('nobs'))
             dst[var].setncatts(src["PRODUCT/SUPPORT_DATA/INPUT_DATA/"+var].__dict__)
@@ -188,17 +186,21 @@ def f_write_blended_files(src_file):
             # Set to be empty because model.predict fails with an empty dataframe
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask]
         else:
-            with open("model_lgbm.pkl", "rb") as handle:
+            with open(cwd+"/model_lgbm.pkl", "rb") as handle:
                 model = pickle.load(handle)
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask] - predict_delta_tropomi_gosat(src_file, model)
 
 if __name__ == "__main__":
 
+    cwd = sys.argv[1]
+    year = sys.argv[2]
+    month = sys.argv[3]
+
+    with open(cwd+"/config.yml", "r") as f:
+        config = yaml.safe_load(f)
+
     # Write BLND files using as many cores as you have
-    year = sys.argv[1]
-    month = sys.argv[2]
-    src_files = glob.glob(os.path.join(config["StorageDir"], "tropomi", f"{year}-{(str(month)).zfill(2)}", "*.nc"))
-    src_files.sort()
+    src_files = sorted(glob.glob(os.path.join(config["StorageDir"], f"{year}-{(str(month)).zfill(2)}", "tropomi", "*.nc")))
     num_processes = multiprocessing.cpu_count()
     with multiprocessing.Pool(processes=num_processes) as pool:
         pool.map(f_write_blended_files, src_files)

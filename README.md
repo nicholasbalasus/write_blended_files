@@ -7,4 +7,4 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
 2. Make an account at [https://dataspace.copernicus.eu/](https://dataspace.copernicus.eu/).
 3. Put your email and password in `~/.netrc` like this `machine identity.dataspace.copernicus.eu login <email> password <password>`.
 4. Specify the year and months of data you want in config.yml.
-5. Run `sbatch run.sh`.
+5. Run `sbatch --export=NONE run.sh`.
