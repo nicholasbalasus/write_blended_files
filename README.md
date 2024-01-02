@@ -4,7 +4,5 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
     - Install [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html).
     - Install `mamba` in the `base` environment using `conda install -c conda-forge mamba`.
     - Run `mamba env create -f blnd_env.yml`.
-2. Make an account at [https://dataspace.copernicus.eu/](https://dataspace.copernicus.eu/).
-3. Put your email and password in `~/.netrc` like this `machine identity.dataspace.copernicus.eu login <email> password <password>`.
-4. Specify the year and months of data you want in config.yml.
-5. Run `sbatch --export=NONE run.sh`.
+2. Specify the year and months of data you want in config.yml.
+3. Run `sbatch --export=NONE run.sh`.

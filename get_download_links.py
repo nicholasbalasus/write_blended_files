@@ -1,69 +1,33 @@
+import datetime
+import calendar
 import requests
-import pandas as pd
+from bs4 import BeautifulSoup
 import sys
-import yaml
-import time
 
 y = sys.argv[1]
 m = sys.argv[2].zfill(2)
 
 if __name__ == "__main__":
     
-    # Get all of the files in our date range
-    df = pd.DataFrame()
-    start = f"{y}-{m}"
-    if m == "12":
-        end = f"{int(y)+1}-01"
-    else:
-        end = f"{y}-{str(int(m)+1).zfill(2)}"
-    link = f"https://catalogue.dataspace.copernicus.eu/odata/v1/Products?$filter=contains(Name,'S5P_') and contains(Name,'__CH4___') and ContentDate/Start gt {start}-01T00:00:00.000Z and ContentDate/Start lt {end}-01T00:00:00.000Z"
-    while True:
+    # Make a list of the days of the year that are in this month
+    num_days = calendar.monthrange(int(y), int(m))[1]
+    days = [datetime.date(int(y), int(m), d).timetuple().tm_yday
+            for d in range(1, num_days+1)]
 
-        print(link)
-        json = requests.get(link).json()
-        time.sleep(1)
+    # Form links for all of the files for wget to download this month
+    links = []
+    for d in days:
+        d = str(d).zfill(3)
+        base = (f"https://tropomi.gesdisc.eosdis.nasa.gov/data/"
+                f"S5P_TROPOMI_Level2/S5P_L2__CH4____HiR.2/{y}/{d}/")
+        reqs = requests.get(base)
+        soup = BeautifulSoup(reqs.text, 'html.parser')
+        for link in soup.find_all('a'):
+            link = base+link.get('href')
+            if link[-3:] == ".nc" and link not in links:
+                links.append(link)
 
-        if len(df) == 0:
-            df = pd.DataFrame.from_dict(json['value'])
-        else:
-            df = pd.concat([df,pd.DataFrame.from_dict(json['value'])], ignore_index=True)
-
-        if '@odata.nextLink' in json.keys():
-            link = json['@odata.nextLink']
-        else:
-            break
-
-    # Add processor version, processor mode, and orbit number
-    df["ProcessorVersion"] = df["Name"].str.extract(r'_(\d{6})_')
-    df["ProcessingMode"] = df["Name"].str.extract(r'_(\S{4})_')
-    df["OrbitNumber"] = df["Name"].str.extract(r'_(\d{5})_')
-    df["CollectionNumber"] = df["Name"].str.extract(r'_(\d{2})_')
-
-    # Drop non-02.04.00/02.05.00 processor versions
-    df = df.drop(df[~((df["ProcessorVersion"] == "020400") | (df["ProcessorVersion"] == "020500"))].index).reset_index(drop=True)
-
-    # Drop non-collection 03 (accounts for odd collection 93 files in 2018-09)
-    df = df.drop(df[df["CollectionNumber"] != "03"].index).reset_index(drop=True)
-
-    # If RPRO and OFFL exist, choose RPRO (it was reprocessed for a reason!)
-    # Follows recommendation here: https://sentinels.copernicus.eu/documents/247904/3541451/Sentinel-5P-Methane-Product-Readme-File
-    unique_orbit_numbers = df["OrbitNumber"].unique()
-    for unique_orbit_number in unique_orbit_numbers:
-        subset = df.loc[df["OrbitNumber"] == unique_orbit_number]
-        if len(subset) == 1:
-            continue
-        else:
-            index_of_files_to_keep = subset.loc[subset["ProcessingMode"] == "RPRO"].index
-            assert len(index_of_files_to_keep) == 1
-            index_of_files_to_drop = subset.loc[subset["ProcessingMode"] != "RPRO"].index
-            print(index_of_files_to_drop)
-            df = df.drop(index_of_files_to_drop)
-
-    # Make sure there are no repeats
-    assert len(df["OrbitNumber"].unique()) == len(df)
-
-    # Write to links.txt
-    for idx in df.index:
-        url = f"http://catalogue.dataspace.copernicus.eu/odata/v1/Products({df.loc[idx,'Id']})/$value\n"
-        with open("links.txt", "a") as f:
-            f.write(url)
+    # Write the links to links.txt
+    with open('links.txt', 'w') as f:
+        for link in links:
+            f.write(f"{link}\n")

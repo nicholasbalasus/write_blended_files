@@ -185,17 +185,16 @@ def f_write_blended_files(src_file):
             # Set to be empty because model.predict fails with an empty dataframe
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask]
         else:
-            with open(cwd+"/model_lgbm.pkl", "rb") as handle:
+            with open("model_lgbm.pkl", "rb") as handle:
                 model = pickle.load(handle)
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask] - predict_delta_tropomi_gosat(src_file, model)
 
 if __name__ == "__main__":
 
-    cwd = sys.argv[1]
-    year = sys.argv[2]
-    month = sys.argv[3]
+    year = sys.argv[1]
+    month = sys.argv[2]
 
-    with open(cwd+"/config.yml", "r") as f:
+    with open("config.yml", "r") as f:
         config = yaml.safe_load(f)
 
     # Write BLND files using as many cores as you have
