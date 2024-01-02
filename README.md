@@ -4,5 +4,6 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
     - Install [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/miniconda-install.html).
     - Install `mamba` in the `base` environment using `conda install -c conda-forge mamba`.
     - Run `mamba env create -f blnd_env.yml`.
-2. Specify the year and months of data you want in config.yml.
-3. Run `sbatch --export=NONE run.sh`.
+2. Generate [prerequisite files](https://disc.gsfc.nasa.gov/information/howto?title=How%20to%20Generate%20Earthdata%20Prerequisite%20Files) to use NASA Earthdata.
+3. Specify the year and months of data you want in config.yml.
+4. Run `sbatch --export=NONE run.sh`.

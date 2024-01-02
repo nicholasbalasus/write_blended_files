@@ -39,7 +39,9 @@ download_tropomi_and_write_blended () {
   python "get_download_links.py" $Year $Month
 
   # Download tropomi data with wget
-  xargs -n 1 -P 4 wget -nv --tries=5 -P ${dir} < links.txt
+  while read link; do
+    wget -nv --load-cookies ~/.urs_cookies --save-cookies ~/.urs_cookies --keep-session-cookies --content-disposition --tries=5 -P ${dir} ${link}
+  done < links.txt
 
   # Write blended files
   python "write_blended_files.py" $Year $Month
