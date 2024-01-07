@@ -24,7 +24,8 @@ if __name__ == "__main__":
         soup = BeautifulSoup(reqs.text, 'html.parser')
         for link in soup.find_all('a'):
             link = base+link.get('href')
-            if link[-3:] == ".nc" and link not in links:
+            processor = ("_020400_" in link) or ("_020500_" in link) or ("_020600_" in link)
+            if link[-3:] == ".nc" and link not in links and processor:
                 links.append(link)
 
     # Write the links to links.txt

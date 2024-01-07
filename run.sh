@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH -t 5-00:00
-#SBATCH -c 48
-#SBATCH --mem 96000
-#SBATCH -p seas_compute
+#SBATCH -t 3-00:00
+#SBATCH -c 64
+#SBATCH --mem 200000
+#SBATCH -p huce_bigmem
 
 # Function to parse yaml files from Stack Overflow
 parse_yaml() {
