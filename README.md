@@ -5,9 +5,25 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
     - Then, run this from the command line:
     ```
     conda install -c conda-forge mamba
-    mamba env create -f environment.yml
+    mamba env create -f resources/environment.yml
     ```
 2. Set up a file of AWS credentials at `~/.aws/config` for the [Copernicus Data Space Ecosystem](https://documentation.dataspace.copernicus.eu/APIs/S3.html) (CDSE). There is a 6 TB per month download limit for this data source.
-3. Run the script `run.sh`.
-    - First, this will download the TROPOMI data from the CDSE.
-    - Then, it will use those files to write blended files.
+3. Set the month you want to generate data for in `config.py` as well as the directory to save them to.
+4. Extract the model to use for correction.
+    - `gunzip -k "model_lgbm.pkl.gz"`
+5. Download TROPOMI data for this month.
+    - Run this from the command line:
+    ```
+    source config.py
+    sbatch -J download -p huce_cascade -t 1-00:00 --mem 16G -c 4\
+       --wrap "source ~/.bashrc; conda activate $CondaEnv; \
+       python -B -m scripts.download_tropomi"
+    ```
+6. Generate the blended TROPOMI+GOSAT data using the downloaded files.
+    - Run this from the command line:
+    ```
+    source config.py
+    sbatch -J write -p sapphire -t 1-00:00 --mem 1000G -c 112\
+        --wrap "source ~/.bashrc; conda activate $CondaEnv ;\
+        python -B -m scripts.write_blended_files"
+    ```

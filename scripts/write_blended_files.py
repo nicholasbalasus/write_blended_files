@@ -7,6 +7,8 @@ import yaml
 import pickle
 import multiprocessing
 import sys
+sys.dont_write_bytecode = True
+from config import a,b,dir,date
 
 # Function to turn one netCDF TROPOMI file into one pandas dataframe
 def get_tropomi_df(tropomi_file):
@@ -74,7 +76,7 @@ def predict_delta_tropomi_gosat(tropomi_file, model):
     # Get rid of the non-predictor variables
     df = df.drop(["latitude","longitude","time","latitude_bounds","xch4","xch4_corrected","pressure_interval","surface_pressure","dry_air_subcolumns","methane_profile_apriori","column_averaging_kernel"], axis=1) 
     df = df.add_prefix("tropomi_")
-    delta_tropomi_gosat = (config["a"]*model.predict(df) + config["b"])
+    delta_tropomi_gosat = (a*model.predict(df) + b)
 
     return delta_tropomi_gosat
 
@@ -83,7 +85,7 @@ def f_write_blended_files(src_file):
 
     # new file will have the same name but with BLND as the acronym and the creation time changed
     dst_file = src_file.split("/")[-1].replace("RPRO","BLND").replace("OFFL", "BLND")
-    dst_file = os.path.join(config["StorageDir"], f"{year}-{(str(month)).zfill(2)}", "blended", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
+    dst_file = os.path.join(dir, date, "blended", dst_file[:dst_file.rfind("_")+1]+pd.Timestamp.utcnow().strftime("%Y%m%dT%H%M%S")+".nc")
 
     # remove dst_file if it already exists (weird notation is because the time generated portion of the filename is unique)
     [os.remove(file) for file in glob.glob(dst_file[:dst_file.rfind("_")+1]+"*")]
@@ -185,22 +187,16 @@ def f_write_blended_files(src_file):
             # Set to be empty because model.predict fails with an empty dataframe
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask]
         else:
-            with open(cwd+"/model_lgbm.pkl", "rb") as handle:
+            with open("resources/model_lgbm.pkl", "rb") as handle:
                 model = pickle.load(handle)
             dst["methane_mixing_ratio_blended"][:] = src["PRODUCT/methane_mixing_ratio_bias_corrected"][:][mask] - predict_delta_tropomi_gosat(src_file, model)
 
 if __name__ == "__main__":
 
-    cwd = sys.argv[1]
-    year = sys.argv[2]
-    month = sys.argv[3]
-
-    with open(cwd+"/config.yml", "r") as f:
-        config = yaml.safe_load(f)
-
     # Write BLND files using as many cores as you have
-    src_files = sorted(glob.glob(os.path.join(config["StorageDir"], f"{year}-{(str(month)).zfill(2)}", "tropomi", "*.nc")))
+    src_files = sorted(glob.glob(os.path.join(dir, date, "tropomi", "*.nc")))
     num_processes = multiprocessing.cpu_count()
+    os.makedirs(os.path.join(dir, date, "blended"), exist_ok=True)
     with multiprocessing.Pool(processes=num_processes) as pool:
         pool.map(f_write_blended_files, src_files)
         pool.close()
