@@ -18,8 +18,8 @@ def initialize():
     credentials = boto3.Session().get_credentials()
     endpoint_url = "https://eodata.dataspace.copernicus.eu"
     s3 = boto3.client('s3', aws_access_key_id=credentials.access_key,
-                    aws_secret_access_key=credentials.secret_key,
-                    endpoint_url=endpoint_url)
+                      aws_secret_access_key=credentials.secret_key,
+                      endpoint_url=endpoint_url)
 
 if __name__ == "__main__":
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     end_date = ((pd.to_datetime(start_date) + pd.DateOffset(months=1))
                 .strftime("%Y-%m-%d"))
 
-    # Account for partial month
+    # Account for partial month in April 2018
     if start_date == "2018-04-01":
         start_date = "2018-04-30"
 
@@ -71,8 +71,8 @@ if __name__ == "__main__":
     # We only want files that are v02.04.00, v02.05.00, or v02.06.00.
     # Also make sure the collection number is 03 to account for some duplicates.
     df = df.loc[((df["ProcessorVersion"] == "020400") |
-                (df["ProcessorVersion"] == "020500") |
-                (df["ProcessorVersion"] == "020600"))]
+                 (df["ProcessorVersion"] == "020500") |
+                 (df["ProcessorVersion"] == "020600"))]
     df = df.drop_duplicates(subset=["Name","ModificationDate"])
     df = df.loc[df["CollectionNumber"] == "03"].reset_index(drop=True)
 
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     df = df.reset_index(drop=True)
     df["S3Path"] = df["Prefix"] + df["Name"]
     s3_paths = sorted(df["S3Path"].to_list())
-    print(f"Going to download {len(s3_paths)} files.")
+    print(f"Downloading {len(s3_paths)} files - ({start_date},{end_date}].")
 
     # Follow stack overflow directions to download over multiple cores.
     # Copernicus specifies that the maxnumber of concurrent connections is 4.

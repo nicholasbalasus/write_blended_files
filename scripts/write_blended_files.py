@@ -76,7 +76,7 @@ def predict_delta_tropomi_gosat(tropomi_file, model):
     # Get rid of the non-predictor variables
     df = df.drop(["latitude","longitude","time","latitude_bounds","xch4","xch4_corrected","pressure_interval","surface_pressure","dry_air_subcolumns","methane_profile_apriori","column_averaging_kernel"], axis=1) 
     df = df.add_prefix("tropomi_")
-    delta_tropomi_gosat = (a*model.predict(df) + b)
+    delta_tropomi_gosat = (float(a)*model.predict(df) + float(b))
 
     return delta_tropomi_gosat
 
@@ -95,7 +95,7 @@ def f_write_blended_files(src_file):
     with Dataset(src_file) as src, Dataset(dst_file, "w") as dst:
     
         # Make sure this is a valid applciation of model_lgbm.pkl
-        assert src.processor_version in ["2.4.0", "2.5.0"]
+        assert src.processor_version in ["2.4.0", "2.5.0", "2.6.0"]
 
         # Set global attributes
         dst.setncatts({

@@ -15,16 +15,14 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
     ```
 5. Download TROPOMI data for this month.
     ```
-    source config.py
     sbatch -J download -p huce_cascade -t 1-00:00 --mem 16G -c 4\
-       --wrap "source ~/.bashrc; conda activate $CondaEnv; \
+       --wrap "source ~/.bashrc; conda activate blnd_env; \
        python -B -m scripts.download_tropomi"
     ```
 6. Generate the blended TROPOMI+GOSAT data using the downloaded files.
     - Run this from the command line:
     ```
-    source config.py
-    sbatch -J write -p sapphire -t 1-00:00 --mem 1000G -c 112\
-        --wrap "source ~/.bashrc; conda activate $CondaEnv ;\
+    sbatch -J write -p huce_cascade -t 1-00:00 --mem 184G -c 48\
+        --wrap "source ~/.bashrc; conda activate blnd_env;\
         python -B -m scripts.write_blended_files"
     ```
