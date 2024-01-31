@@ -1,12 +1,12 @@
 ## Product User Manual for the Blended TROPOMI+GOSAT Product
 Nicholas Balasus\
-7 July 2023
+31 January 2024
 
 ### (1) Introduction
 The blended TROPOMI+GOSAT files are formed by applying the correction described in Balasus et al. (2023) to the variable `methane_mixing_ratio_bias_corrected` in the operational TROPOMI files. This adds the new variable of `methane_mixing_ratio_blended`. The correction is applicable to the files with a processor version of 02.04.00, 02.05.00, or 02.06.00 and to observations in those files with `qa_value` == 1.0. The following sections describe downloading the data, the file names, the file contents, and how to plot the file contents using Python.
 
 ### (2) Downloading the data
--
+ -
 
 ### (3) File names
 An example file name is:
@@ -30,7 +30,7 @@ S5P_RPRO_L2__CH4____20191215T112041_20191215T130211_11252_03_020400_20221119T003
 ```
 
 ### (4) File contents
-The files contain the subset of soundings from the OFFL/RPRO files that had a `qa_value` == 1.0. All other observations are excluded because the blended TROPOMI+GOSAT correction is not valid to apply to them. Additionally, only a subset of variables is included in the BLND files (and they no longer reside in netCDF groups). The files have dimensions of `nobs`, `layer`, and `corner`. All variables are the same as described in the TROPOMI methane PUM except for `methane_mixing_ratio_blended` (derived in this work) and `time_utc` (expanded to all observations in these files). The following is an example for the orbit number 11252 file listed above.
+The files contain the subset of soundings from the OFFL/RPRO files that have a `qa_value` == 1.0. All other observations are excluded because the blended TROPOMI+GOSAT correction is not valid to apply to them. Additionally, only a subset of variables is included in the BLND files (and they no longer reside in netCDF groups). The files have dimensions of `nobs`, `layer`, and `corner`. All variables are the same as described in the TROPOMI methane PUM except for `methane_mixing_ratio_blended` (derived in this work) and `time_utc` (expanded to all observations in these files). The following is an example for the orbit number 11252 file listed above.
 ```
 <class 'netCDF4._netCDF4.Dataset'>
 root group (NETCDF4 data model, file format HDF5):
