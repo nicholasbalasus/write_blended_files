@@ -6,4 +6,4 @@ a="1.18"
 b="-0.40"
 
 # Year and month to generate data for (yyyy-mm)
-date="2023-08"
+date="2018-05"

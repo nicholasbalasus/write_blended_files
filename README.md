@@ -10,9 +10,10 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
 2. Set up a file of AWS credentials at `~/.aws/config` for the [Copernicus Data Space Ecosystem](https://documentation.dataspace.copernicus.eu/APIs/S3.html) (CDSE). There is a 6 TB per month download limit for this data source.
 3. Set the month you want to generate data for in `config.py` as well as the directory to save them to.
 4. Extract the model to use for correction.
-    - `gunzip -k "model_lgbm.pkl.gz"`
+    ```
+    gunzip -k "resources/model_lgbm.pkl.gz"
+    ```
 5. Download TROPOMI data for this month.
-    - Run this from the command line:
     ```
     source config.py
     sbatch -J download -p huce_cascade -t 1-00:00 --mem 16G -c 4\

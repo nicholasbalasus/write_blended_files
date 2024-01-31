@@ -27,6 +27,10 @@ if __name__ == "__main__":
     end_date = ((pd.to_datetime(start_date) + pd.DateOffset(months=1))
                 .strftime("%Y-%m-%d"))
 
+    # Account for partial month
+    if start_date == "2018-04-01":
+        start_date = "2018-04-30"
+
     # Make a directory to save the files to
     dir = dir + "/" + date + "/" + "tropomi"
     os.makedirs(dir, exist_ok=True)
