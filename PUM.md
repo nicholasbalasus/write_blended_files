@@ -1,9 +1,10 @@
 ## Product User Manual for the Blended TROPOMI+GOSAT Product
 Nicholas Balasus\
-31 January 2024
+31 January 2024\
+`nicholasbalasus@g.harvard.edu`
 
 ### (1) Introduction
-The blended TROPOMI+GOSAT files are formed by applying the correction described in Balasus et al. (2023) to the variable `methane_mixing_ratio_bias_corrected` in the operational TROPOMI files. This adds the new variable of `methane_mixing_ratio_blended`. The correction is applicable to the files with a processor version of 02.04.00, 02.05.00, or 02.06.00 and to observations in those files with `qa_value` == 1.0. The operational TROPOMI files are sourced from the [Copernicus Data Space Ecosystem](https://dataspace.copernicus.eu). The following sections describe downloading the data, the file names, the file contents, and how to plot the file contents using Python.
+The blended TROPOMI+GOSAT files are formed by applying the correction described in [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023) to the variable `methane_mixing_ratio_bias_corrected` in the operational TROPOMI files. This adds the new variable of `methane_mixing_ratio_blended`. The correction is applicable to the files with a processor version of 02.04.00, 02.05.00, or 02.06.00 and to observations in those files with `qa_value` == 1.0. The operational TROPOMI files are sourced from the [Copernicus Data Space Ecosystem](https://dataspace.copernicus.eu). The following sections describe downloading the data, the file names, the file contents, and how to plot the file contents using Python.
 
 ### (2) Downloading the data
  -
@@ -42,7 +43,7 @@ root group (NETCDF4 data model, file format HDF5):
 ```
 
 ### (5) Plotting
-Included here is a simple example for how to plot the data in Python. The pixels are shown as their full extents (using latitude and longitude bounds), though a scatter plot of the latitude and longitude centers can be used for a quick look. The optional coastal filter from Balasus et al. (2023) is used.
+Included here is a simple example for how to plot the data in Python. The pixels are shown as their full extents (using latitude and longitude bounds), though a scatter plot of the latitude and longitude centers can be used for a quick look. The optional coastal filter from [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023) is used.
 
 ```
 import matplotlib.pyplot as plt
@@ -56,7 +57,7 @@ fig, ax = plt.subplots(figsize=(10,6),
 
 file = "S5P_BLND_L2__CH4____20191215T112041_20191215T130211_11252_03_020400_20230614T125420.nc"
 with Dataset(file) as ds:
-    # Optional coastal filter from Balasus et al. (2023)
+    # Optional coastal filter
     sc = (ds["surface_classification"][:] & 0x03).astype(int)
     valid_idx = ~((sc == 3) | ((sc == 2) & (ds["chi_square_SWIR"][:] > 20000)))
     lon_bounds = ds["longitude_bounds"][:][valid_idx]

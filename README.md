@@ -14,6 +14,7 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
     gunzip -k "resources/model_lgbm.pkl.gz"
     ```
 5. Download TROPOMI data for this month.
+    - Run this from the command line:
     ```
     sbatch -J download -p sapphire -t 1-00:00 --mem 32G -c 4\
        --wrap "source ~/.bashrc; conda activate blnd_env; \
