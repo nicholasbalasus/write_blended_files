@@ -1,5 +1,5 @@
 # Directory to store files at
-dir="/n/holylfs05/LABS/jacob_lab/Users/nbalasus/dataverse"
+dir="/n/holylfs05/LABS/jacob_lab/Users/nbalasus/aws"
 
 # Correction factors from Balasus et al. (2023)
 a="1.18"
