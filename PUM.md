@@ -1,6 +1,6 @@
 ## Product User Manual for the Blended TROPOMI+GOSAT Product
 Nicholas Balasus\
-31 January 2024\
+8 February 2024\
 nicholasbalasus@g.harvard.edu
 
 ### (1) Introduction
