@@ -7,7 +7,7 @@ nicholasbalasus@g.harvard.edu
 The blended TROPOMI+GOSAT files are formed by applying the correction described in [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023) to the variable `methane_mixing_ratio_bias_corrected` in the operational TROPOMI files. This adds the new variable of `methane_mixing_ratio_blended`. The correction is applicable to the files with a processor version of 02.04.00, 02.05.00, or 02.06.00 and to observations in those files with `qa_value` == 1.0. The operational TROPOMI files are sourced from the [Copernicus Data Space Ecosystem](https://dataspace.copernicus.eu). The following sections describe downloading the data, the file names, the file contents, and how to plot the file contents using Python.
 
 ### (2) Downloading the data
- -
+The data are all available on S3 on AWS. There are a variety of tools to download data from S3. Please see [this](https://github.com/nicholasbalasus/write_blended_files/blob/main/resources/aws_tutorial_2.ipynb) tutorial for an example with Python. Please send me an email if you are having trouble accessing the data.
 
 ### (3) File names
 An example file name is:
@@ -43,7 +43,7 @@ root group (NETCDF4 data model, file format HDF5):
 ```
 
 ### (5) Plotting
-Included here is a simple example for how to plot the data in Python. The pixels are shown as their full extents (using latitude and longitude bounds), though a scatter plot of the latitude and longitude centers can be used for a quick look. The optional coastal filter from [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023) is used.
+Included here is a simple example for how to plot the data in Python. The pixels are shown as their full extents (using latitude and longitude bounds), though a scatter plot of the latitude and longitude centers can be used for a quick look. The optional coastal filter from [Balasus et al. (2023)](https://doi.org/10.5194/amt-16-3787-2023) is used. For an example of plotting a one month average of data, please see [this](https://github.com/nicholasbalasus/write_blended_files/blob/main/resources/aws_tutorial_1.ipynb) tutorial.
 
 ```
 import matplotlib.pyplot as plt
