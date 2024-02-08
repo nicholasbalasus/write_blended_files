@@ -9,7 +9,7 @@ The blended TROPOMI+GOSAT files are formed by applying the correction described 
 ### (2) Downloading the data
 The data are all available on S3 on AWS. There are a variety of tools to download data from S3. Please see [this](https://github.com/nicholasbalasus/write_blended_files/blob/main/resources/aws_tutorial_2.ipynb) tutorial for an example with Python. Please send me an email if you are having trouble accessing the data.\
 
-Alternatively, you can access the bucket from your browser (here)[https://s3-us-west-2.amazonaws.com/blended-tropomi-gosat-methane/index.html]. Links can be clicked on individually to download or you could aggregate them and download with a tool like `wget`.
+Alternatively, you can access the bucket from your browser [here](https://s3-us-west-2.amazonaws.com/blended-tropomi-gosat-methane/index.html). Links can be clicked on individually to download or you could aggregate them and download with a tool like `wget`.
 
 ### (3) File names
 An example file name is:
