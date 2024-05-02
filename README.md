@@ -3,7 +3,12 @@ These scripts write one month of data for the blended TROPOMI+GOSAT product as d
 1. Create the `blnd_env` environment.
     - Install [micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html).
     - Run `micromamba create -f resources/environment.yml`.
-2. Set up a file of AWS credentials at `~/.aws/config` for the [Copernicus Data Space Ecosystem](https://documentation.dataspace.copernicus.eu/APIs/S3.html) (CDSE). There is a 6 TB per month download limit for this data source.
+2. Set up a file of AWS credentials at `~/.aws/config` for the [Copernicus Data Space Ecosystem](https://documentation.dataspace.copernicus.eu/APIs/S3.html) (CDSE). There is a 6 TB per month download limit for this data source. `~/.aws/config` should look like this:
+    ```
+    [default]
+    aws_access_key_id = [access key from CDSE]
+    aws_secret_access_key = [secret key from CDSE]
+    ```
 3. Set the month you want to generate data for in `config.py` as well as the directory to save them to.
 4. Extract the model to use for correction.
     ```
