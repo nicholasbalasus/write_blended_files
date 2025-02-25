@@ -56,7 +56,7 @@ if __name__ == "__main__":
                 f"{years[i]}/{months[i]}/{days[i]}/")
         for key in s3.list_objects(Bucket="eodata", Prefix=Prefix)["Contents"]:
             prefixes.append(Prefix)
-            names.append(key["Key"].split("/")[-2])
+            names.append(key["Key"].split("/")[-1])
 
     # Organize the information about each of the files
     df = pd.DataFrame()
@@ -98,10 +98,9 @@ if __name__ == "__main__":
     # Copernicus specifies that the maxnumber of concurrent connections is 4.
     def download_from_s3(s3_path):
         bucket_name = "eodata"
-        file =  s3_path.split("/")[-1] + ".nc"
-        object_key = s3_path + "/" + file
+        file =  s3_path.split("/")[-1]
         local_file_path = dir + "/" + file
-        s3.download_file(bucket_name, object_key, local_file_path)
+        s3.download_file(bucket_name, s3_path, local_file_path)
 
     with multiprocessing.Pool(4, initialize) as pool:
         pool.map(download_from_s3, s3_paths)
