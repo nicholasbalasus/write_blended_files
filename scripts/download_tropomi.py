@@ -72,7 +72,9 @@ if __name__ == "__main__":
     # Also make sure the collection number is 03 to account for some duplicates.
     df = df.loc[((df["ProcessorVersion"] == "020400") |
                  (df["ProcessorVersion"] == "020500") |
-                 (df["ProcessorVersion"] == "020600"))]
+                 (df["ProcessorVersion"] == "020600") |
+                 (df["ProcessorVersion"] == "020701") |
+                 (df["ProcessorVersion"] == "020800"))]
     df = df.drop_duplicates(subset=["Name","ModificationDate"])
     df = df.loc[df["CollectionNumber"] == "03"].reset_index(drop=True)
 

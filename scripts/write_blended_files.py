@@ -95,7 +95,7 @@ def f_write_blended_files(src_file):
     with Dataset(src_file) as src, Dataset(dst_file, "w") as dst:
     
         # Make sure this is a valid applciation of model_lgbm.pkl
-        assert src.processor_version in ["2.4.0", "2.5.0", "2.6.0"]
+        assert src.processor_version in ["2.4.0", "2.5.0", "2.6.0", "2.7.1", "2.8.0"]
 
         # Set global attributes
         dst.setncatts({
