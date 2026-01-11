@@ -68,15 +68,19 @@ if __name__ == "__main__":
     df["ModificationDate"] = df["Name"].str.extract(r'_\d{6}_(\d{8}T\d{6})')
     df["CollectionNumber"] = df["Name"].str.extract(r'_(\d{2})_')
 
-    # We only want files that are v02.04.00, v02.05.00, or v02.06.00.
+    # Make sure this is an acceptable processor version.
     # Also make sure the collection number is 03 to account for some duplicates.
     df = df.loc[((df["ProcessorVersion"] == "020400") |
                  (df["ProcessorVersion"] == "020500") |
                  (df["ProcessorVersion"] == "020600") |
                  (df["ProcessorVersion"] == "020701") |
-                 (df["ProcessorVersion"] == "020800"))]
+                 (df["ProcessorVersion"] == "020800") | 
+                 (df["ProcessorVersion"] == "020901"))]
     df = df.drop_duplicates(subset=["Name","ModificationDate"])
     df = df.loc[df["CollectionNumber"] == "03"].reset_index(drop=True)
+
+    # Drop NRTI files (new in December 2025)
+    df = df.loc[df["ProcessingMode"] != "NRTI"].reset_index(drop=True)
 
     # Deal with duplicate orbit numbers.
     unique_orbit_numbers = df["OrbitNumber"].unique()
